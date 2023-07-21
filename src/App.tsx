@@ -8,25 +8,33 @@ import ErrorFallback from './components/ErrorFallback';
 const Skeletons = [...Array(10).keys()].map(i => <Skeleton key={i} />)
 
 function App() {
-  const [currentUserId, setCurrentUserId] = useState<number>(0);
+  const [currentUserId, setCurrentUserId] = useState(0)
 
-  const content = currentUserId == 0
-    ? <p className="message">Select an Employee to view posts</p>
-    : (
+  const content =
+    currentUserId === 0 ? (
+      <h2 className="message">Select an Employee to view posts</h2>
+    ) : (
       <ErrorBoundary
         FallbackComponent={ErrorFallback}
-        onReset={() => setCurrentUserId(0)}
+        onReset={(details) => {
+          if (details.reason !== 'keys') {
+            setCurrentUserId(0);
+          }
+        }}
         resetKeys={[currentUserId]}
       >
         <Suspense fallback={Skeletons}>
           <PostsList currentUserId={currentUserId} />
         </Suspense>
       </ErrorBoundary>
-    )
+    );
 
   return (
     <>
-      <Header currentUserId={currentUserId} setCurrentUserId={setCurrentUserId} />
+      <Header
+        currentUserId={currentUserId}
+        setCurrentUserId={setCurrentUserId}
+      />
       {content}
     </>
   )

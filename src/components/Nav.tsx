@@ -1,6 +1,6 @@
 import useSWR from 'swr'
 import { usersApiUrl, getUsers } from '../api/usersApi'
-import { ChangeEvent } from 'react';
+import { ChangeEvent, ReactElement } from 'react';
 
 interface PropsType {
   setCurrentUserId: (value: number) => void,
@@ -16,16 +16,16 @@ function Nav({ setCurrentUserId, currentUserId }: PropsType) {
     getUsers,
   );
 
-  if (isLoading) {
-    return <p>Loading users...</p>
+  let options: ReactElement | ReactElement[] = <option>Loading...</option>;
+
+  if (!isLoading) {
+    options = users.map(user => (
+      <option value={user.id} key={`opt${user.id}`}>{user.name}</option>
+    ));
+
+    const titleValue = <option key="opt0" value="0">Employees</option>
+    options.push(titleValue)
   }
-
-  const options = users.map(user => (
-    <option value={user.id} key={`opt${user.id}`}>{user.name}</option>
-  ));
-
-  const titleValue = <option key="opt0" value="0">Employees</option>
-  options.push(titleValue)
 
   const onChangeUser = (e: ChangeEvent<HTMLSelectElement>): void =>
     setCurrentUserId(Number(e.target.value));

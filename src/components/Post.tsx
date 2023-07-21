@@ -7,8 +7,7 @@ interface PropsType {
 }
 
 const Post = ({ post, user }: PropsType): ReactElement => {
-  if (user?.id === 2)
-    throw new Error();
+  // if (user?.id === 2) throw new Error('Error #2')
 
   return (
     <article className="post">
